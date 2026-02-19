@@ -6,15 +6,16 @@ phases:
       - echo Logging in to Amazon ECR...
       - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
       - REGION=eu-north-1
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/namespace/signup-backend
       - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
   build:
     commands:
       - echo Building Docker image...
       - docker build -t signup-backend .
-      - docker tag signup-backend:latest $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/signup-backend:latest
+      - docker tag signup-backend:latest $REPOSITORY_URI:latest
 
   post_build:
     commands:
       - echo Pushing Docker image...
-      - docker push $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/signup-backend:latest
+      - docker push $REPOSITORY_URI:latest
