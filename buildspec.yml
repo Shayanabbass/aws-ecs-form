@@ -11,6 +11,8 @@ phases:
 
   build:
     commands:
+      - echo "Files in current folder:"
+      - ls -la
       - echo Building Docker image...
       - docker build -t signup-backend .
       - docker tag signup-backend:latest $REPOSITORY_URI:latest
@@ -19,3 +21,4 @@ phases:
     commands:
       - echo Pushing Docker image...
       - docker push $REPOSITORY_URI:latest
+
