@@ -1,3 +1,5 @@
+const cors = require('cors');
+
 const express = require('express');
 const mysql = require('mysql2/promise');
 const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
@@ -5,6 +7,7 @@ const Busboy = require('busboy');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
@@ -23,14 +26,11 @@ const s3 = new S3Client({
 });
 
 // Middleware to handle CORS preflight
-app.options('*', (req, res) => {
-    res.set({
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "POST,OPTIONS",
-        "Access-Control-Allow-Headers": "*",
-    });
-    res.sendStatus(200);
-});
+app.use(cors({
+    origin: '*', // or your frontend URL
+    methods: ['POST', 'OPTIONS'],
+    allowedHeaders: '*',
+}));
 
 app.post('/upload', async (req, res) => {
     const contentType = req.headers['content-type'] || req.headers['Content-Type'];
