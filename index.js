@@ -31,7 +31,9 @@ app.use(cors({
     methods: ['POST', 'OPTIONS'],
     allowedHeaders: '*',
 }));
-
+app.get("/", (req, res) => {
+  res.send("Hello from Express!");
+});
 app.post('/upload', async (req, res) => {
     const contentType = req.headers['content-type'] || req.headers['Content-Type'];
 
